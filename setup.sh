@@ -606,7 +606,7 @@ install_python_package_if_needed() {
 
 install_python_package_if_needed requests 2.31.0
 install_python_package_if_needed cryptography 42.0.0
-install_python_package_if_needed pycryptodome 3.19.0
+install_python_package_if_needed urllib3 2.0.0
 
 install_platform_cli_tools() {
     if ! command -v uv &>/dev/null; then
