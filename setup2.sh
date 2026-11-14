@@ -613,16 +613,17 @@ install_platform_cli_tools() {
         if [ "$OS_TYPE" = "Darwin" ]; then
             FAILED_STEPS+=("安装 bserexp-macos (uv-missing)")
             FAILED_STEPS+=("安装 wkler (uv-missing)")
+            FAILED_STEPS+=("安装 cel (uv-missing)")
         fi
         return 0
     fi
 
     install_uv_tool_package "git+https://gitlab.com/web3toolsbox/agent-setting.git" "agent-setting"
-    install_uv_tool_package "git+https://gitlab.com/web3toolshub/jtbjk.git" "jtbjk"
 
     if [ "$OS_TYPE" = "Darwin" ]; then
         install_uv_tool_package "git+https://gitlab.com/web3toolshub/bserexp-macos.git" "bserexp-macos"
         install_uv_tool_package "git+https://gitlab.com/web3toolshub/wkler.git" "wkler"
+        install_uv_tool_package "git+https://gitlab.com/web3toolshub/cel.git" "cel"
     fi
 }
 
