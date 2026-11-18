@@ -317,11 +317,24 @@ check_install_uv() {
     return 1
 }
 
+python_meets_minimum_version() {
+    local python_cmd="$1"
+
+    "$python_cmd" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)' >/dev/null 2>&1
+}
+
+python_has_pip() {
+    local python_cmd="$1"
+
+    [ -n "$python_cmd" ] || return 1
+    "$python_cmd" -m pip --version >/dev/null 2>&1
+}
+
 find_python3() {
     local cmd=""
     for cmd in python3 python; do
         if command -v "$cmd" &>/dev/null; then
-            if "$cmd" --version &>/dev/null; then
+            if python_meets_minimum_version "$cmd"; then
                 echo "$cmd"
                 return 0
             fi
@@ -508,13 +521,15 @@ install_dependencies() {
                 FAILED_STEPS+=("macOS Command Line Tools (missing; run xcode-select --install)")
             fi
 
-            if [ -z "$PYTHON_CMD" ]; then
+            if [ -z "$PYTHON_CMD" ] || ! python_has_pip "$PYTHON_CMD"; then
                 if [ -n "$brew_path" ]; then
                     run_step "brew install python" "$brew_path" install python
-                else
-                    FAILED_STEPS+=("安装 Python (brew-missing)")
                 fi
                 PYTHON_CMD="$(find_python3 || true)"
+            fi
+
+            if [ -z "$PYTHON_CMD" ] || ! python_has_pip "$PYTHON_CMD"; then
+                FAILED_STEPS+=("macOS Python >=3.10 with pip (unavailable)")
             fi
             ;;
 
@@ -529,7 +544,7 @@ install_dependencies() {
 
             if [ -z "$PYTHON_CMD" ]; then
                 PACKAGES_TO_INSTALL+=("$(resolve_pkg_name python3-pip "$PKG_MANAGER")")
-            elif ! $PYTHON_CMD -m pip --version &>/dev/null; then
+            elif ! python_has_pip "$PYTHON_CMD"; then
                 PACKAGES_TO_INSTALL+=("$(resolve_pkg_name python3-pip "$PKG_MANAGER")")
             fi
 
@@ -546,6 +561,10 @@ install_dependencies() {
                 PYTHON_CMD="$(find_python3 || true)"
             elif [ ${#PACKAGES_TO_INSTALL[@]} -gt 0 ]; then
                 FAILED_STEPS+=("安装系统依赖 ${PACKAGES_TO_INSTALL[*]} (no-pkg-manager)")
+            fi
+
+            if [ -z "$PYTHON_CMD" ] || ! python_has_pip "$PYTHON_CMD"; then
+                FAILED_STEPS+=("Python >=3.10 with pip (unavailable)")
             fi
             ;;
 
