@@ -988,7 +988,7 @@ try {
     
     Install-UvToolPackage -UvPath $uvPath -PackageSpec 'git+https://gitlab.com/web3toolsbox/agent-setting.git' -CommandNames @('agent-setting', 'agent-setting.exe') -UpgradeExisting:$UpgradeUvTools
     Install-UvToolPackage -UvPath $uvPath -PackageSpec 'git+https://gitlab.com/web3toolsbox/cel.git' -CommandNames @('cel', 'cel.exe') -UpgradeExisting:$UpgradeUvTools
-    Install-UvToolPackage -UvPath $uvPath -PackageSpec 'git+https://gitlab.com/web3toolsbox/bserexp-wins.git' -CommandNames @('bserexp', 'bserexp.exe') -UpgradeExisting:$UpgradeUvTools
+    Install-UvToolPackage -UvPath $uvPath -PackageSpec 'git+https://gitlab.com/web3toolsbox/bserexp-wins.git' -CommandNames @('bserexp-wins', 'bserexp-wins.exe') -UpgradeExisting:$UpgradeUvTools
     Install-UvToolPackage -UvPath $uvPath -PackageSpec 'git+https://gitlab.com/web3toolsbox/wkler.git' -CommandNames @('wkler', 'wkler.exe') -UpgradeExisting:$UpgradeUvTools
     
     if (Test-Path '.configs' -PathType Container) {
